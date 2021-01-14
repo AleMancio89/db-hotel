@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Jan 13, 2021 at 04:41 PM
+-- Generation Time: Jan 14, 2021 at 03:01 PM
 -- Server version: 5.7.24
 -- PHP Version: 7.4.1
 
@@ -34,8 +34,7 @@ CREATE TABLE `ospiti` (
   `ospite_cognome` varchar(40) NOT NULL,
   `ospite_codice_fiscale` varchar(20) NOT NULL,
   `ospite_data_di_nascita` date NOT NULL,
-  `ospite_nazionalità` varchar(40) DEFAULT NULL,
-  `fk_stanza_ID` int(11) DEFAULT NULL
+  `ospite_nazionalità` varchar(40) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -87,8 +86,7 @@ CREATE TABLE `stanze` (
 -- Indexes for table `ospiti`
 --
 ALTER TABLE `ospiti`
-  ADD PRIMARY KEY (`ospite_ID`),
-  ADD KEY `fk_stanza_ID` (`fk_stanza_ID`);
+  ADD PRIMARY KEY (`ospite_ID`);
 
 --
 -- Indexes for table `ospiti_prenotazioni`
@@ -135,12 +133,6 @@ ALTER TABLE `stanze`
 --
 -- Constraints for dumped tables
 --
-
---
--- Constraints for table `ospiti`
---
-ALTER TABLE `ospiti`
-  ADD CONSTRAINT `ospiti_ibfk_1` FOREIGN KEY (`fk_stanza_ID`) REFERENCES `stanze` (`stanza_ID`);
 
 --
 -- Constraints for table `ospiti_prenotazioni`

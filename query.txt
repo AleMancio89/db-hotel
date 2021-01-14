@@ -1,0 +1,49 @@
+●	Seleziona tutti gli ospiti che sono stati identificati con la carta di identità
+
+SELECT * FROM `ospiti` WHERE `document_type` = 'CI';
+
+●	Seleziona tutti gli ospiti che sono nati dopo il 1988
+
+SELECT * FROM `ospiti` WHERE `date_of_birth` > '1988-12-31 23:59:59';
+
+●	Seleziona tutti gli ospiti che hanno più di 20 anni (al momento dell’esecuzione della query)
+
+SELECT * FROM `ospiti` WHERE TIMESTAMPDIFF(YEAR, date_of_birth, CURRENT_DATE) > 20;
+
+●	Seleziona tutti gli ospiti il cui nome inizia con la D
+
+SELECT * FROM `ospiti` WHERE name like 'd%';
+
+●	Calcola il totale degli ordini accepted
+
+SELECT SUM(price) FROM pagamenti WHERE `status` = 'accepted';
+
+
++++ GROUP BY +++
+
+●	Conta gli ospiti raggruppandoli per anno di nascita
+
+SELECT YEAR(`date_of_birth`) as 'Anno di nascita', COUNT(id) as 'Numero ospiti' FROM `ospiti` GROUP BY YEAR(`date_of_birth`);
+
+●	Somma i prezzi dei pagamenti raggruppandoli per status
+
+SELECT SUM(price) as Totale, `status` FROM `pagamenti` GROUP BY `status`;
+
+●	Conta quante volte è stata prenotata ogni stanza
+
+SELECT `stanza_id`, COUNT(id) as 'Numero prenotazioni' FROM `prenotazioni` GROUP BY `stanza_id`;
+
+
++++ JOIN +++
+
+●	Come si chiamano gli ospiti che hanno fatto più di due prenotazioni?
+
+SELECT `name`, COUNT(*) FROM `ospiti` JOIN `prenotazioni_has_ospiti` ON ospiti.id = prenotazioni_has_ospiti.ospite_id GROUP BY `name` HAVING COUNT(*) > 2;
+
+●	Stampare tutti gli ospiti per ogni prenotazione
+
+SELECT prenotazioni_has_ospiti.prenotazione_id, ospiti.name, ospiti.lastname FROM `prenotazioni_has_ospiti` JOIN `ospiti` ON ospiti.id = prenotazioni_has_ospiti.ospite_id;
+
+●	Stampare Nome, Cognome, Prezzo e Pagante per tutte le prenotazioni fatte a Maggio 2018
+
+SELECT prenotazioni.created_at as 'Data Prenotazione', ospiti.name as 'Nome Prenotazione', ospiti.lastname as 'Cognome Prenotazione', pagamenti.price as Prezzo, paganti.name as 'Nome Pagante', paganti.lastname as 'Cognome Pagante' FROM `prenotazioni` JOIN `prenotazioni_has_ospiti` ON prenotazioni.id = prenotazioni_has_ospiti.prenotazione_id JOIN `ospiti` ON prenotazioni_has_ospiti.ospite_id = ospiti.id JOIN `pagamenti` ON pagamenti.prenotazione_id = prenotazioni.id JOIN `paganti` ON paganti.id = pagamenti.pagante_id WHERE prenotazioni.created_at > '2018-04-30 23:59:59' AND prenotazioni.created_at < '2018-06-01 00:00:00' ORDER BY prenotazioni.created_at ASC;
